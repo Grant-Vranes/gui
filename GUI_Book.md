@@ -2,11 +2,50 @@
 
 ---
 
-[TOC]
+- [GUI编程](#gui)
+    - [一、初识GUI](#gui)
+        - [1、简介](#1)
+        - [2、AWT](#2awt)
+            - [2.1AWT介绍](#21awt)
+            - [2.2 组件和容器](#22)
+                - [2.2.1 Frame](#221-frame)
+                - [2.2.2 面板Panel](#222-panel)
+            - [2.3 布局管理器](#23)
+            - [2.4 事件监听](#24)
+            - [2.5 输入框TextField监听](#25-textfield)
+            - [2.6 简易计算器（组合+内部类）](#26)
+                    - [面向过程写法](#)
+                    - [面向对象写法优化](#)
+                    - [内部类更优化写法：为了更好的包装](#)
+            - [2.7 画笔](#27)
+            - [2.8 鼠标监听](#28)
+            - [2.9 窗口监听](#29)
+            - [2.10 键盘监听](#210)
+        - [3、Swing](#3swing)
+            - [3.1 窗口、面板](#31)
+            - [3.2 弹窗](#32)
+            - [3.3 标签](#33)
+            - [3.4 面板](#34)
+                    - [JPanel](#jpanel)
+                    - [JScrollPanel 滚动条](#jscrollpanel)
+            - [3.5 按钮](#35)
+            - [3.6 列表](#36)
+                    - [下拉框](#)
+                    - [列表框](#)
+            - [3.7 文本框](#37)
+                - [文本框](#)
+                - [密码框](#)
+                - [文本域](#)
+    - [二、贪吃蛇项目](#)
+        - [1、贪吃蛇界面绘制](#1)
+        - [2、对于功能的添加](#2)
+        - [3、代码结构](#3)
 
 ---
 
 
+
+![1626517327635](GUI_Book.assets/1626517327635.png)
 
 
 
@@ -1201,30 +1240,784 @@ public class ImageIconDemo extends JFrame {
 
 #### 3.4 面板
 
+###### JPanel
 
+```java
+package cn.akio.lesson05;
+
+import javax.swing.*;
+import java.awt.*;
+
+/**
+ * @author Akio
+ * @ClassName JPanelDemo
+ * @Description 面板
+ * @Date 2021/7/14 10:05
+ */
+public class JPanelDemo extends JFrame {
+    public JPanelDemo(){
+        Container container = this.getContentPane();
+
+        container.setLayout(new GridLayout(2,2,10,10));//最后的两个参数是间距
+
+        JPanel panel1 = new JPanel(new GridLayout(1,3));
+        JPanel panel2 = new JPanel(new GridLayout(1,2));
+        JPanel panel3 = new JPanel(new GridLayout(2,1));
+        JPanel panel4 = new JPanel(new GridLayout(3,2));
+
+        panel1.add(new JButton("1"));
+        panel1.add(new JButton("1"));
+        panel1.add(new JButton("1"));
+
+        panel2.add(new JButton("2"));
+        panel2.add(new JButton("2"));
+
+        panel3.add(new JButton("3"));
+        panel3.add(new JButton("3"));
+
+        panel4.add(new JButton("4"));
+        panel4.add(new JButton("4"));
+        panel4.add(new JButton("4"));
+        panel4.add(new JButton("4"));
+        panel4.add(new JButton("4"));
+        panel4.add(new JButton("4"));
+
+        container.add(panel1);
+        container.add(panel2);
+        container.add(panel3);
+        container.add(panel4);
+
+        this.setVisible(true);
+        this.setSize(500,500);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args) {
+        new JPanelDemo();
+    }
+}
+```
+
+![1626311078853](GUI_Book.assets/1626311078853.png)
+
+
+
+###### JScrollPanel 滚动条
+
+```java
+package cn.akio.lesson05;
+
+import javax.swing.*;
+import java.awt.*;
+
+/**
+ * @author Akio
+ * @ClassName JScrollDemo
+ * @Description 滚动条
+ * @Date 2021/7/15 12:56
+ */
+public class JScrollDemo extends JFrame{
+    public JScrollDemo(){
+        Container container = this.getContentPane();
+
+        //文本域
+        JTextArea textArea = new JTextArea(20,30);
+        textArea.setText("欢迎来到90年代");
+
+        //Scorll面板
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        container.add(scrollPane);
+
+        this.setVisible(true);
+        this.setBounds(100,100,300,350);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+    public static void main(String[] args) {
+        new JScrollDemo();
+    }
+}
+```
+
+![1626325543658](GUI_Book.assets/1626325543658.png)
 
 
 
 #### 3.5 按钮
 
+- 图片按钮
+
+  ```java
+  package cn.akio.lesson05;
+  
+  import cn.akio.lesson04.ImageIconDemo;
+  
+  import javax.swing.*;
+  import java.awt.*;
+  import java.net.URL;
+  
+  /**
+   * @author Akio
+   * @ClassName JButtonDemo01
+   * @Description TODO
+   * @Date 2021/7/15 13:07
+   */
+  public class JButtonDemo01 extends JFrame {
+      public JButtonDemo01(){
+          Container container = this.getContentPane();
+  
+          //将一个图片变成图标
+          URL resource = JButtonDemo01.class.getResource("123.jpg");
+          Icon icon = new ImageIcon(resource);
+  
+          //把这个图标放在按钮上
+          JButton button = new JButton();
+          button.setIcon(icon);
+          button.setToolTipText("图片按钮");//鼠标悬停时展示的文本
+  
+          container.add(button);
+  
+          this.setVisible(true);
+          this.setSize(500,300);
+          this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+      }
+  
+      public static void main(String[] args) {
+          new JButtonDemo01();
+      }
+  }
+  //这个只是把图片放到了按钮上
+  ```
+
+![1626326229209](GUI_Book.assets/1626326229209.png)
+
 - 单选按钮
+
+  ```java
+  package cn.akio.lesson05;
+  
+  import javax.swing.*;
+  import java.awt.*;
+  import java.net.URL;
+  
+  /**
+   * @author Akio
+   * @ClassName JButtonDemo01
+   * @Description TODO
+   * @Date 2021/7/15 13:07
+   */
+  public class JButtonDemo02 extends JFrame {
+      public JButtonDemo02(){
+          Container container = this.getContentPane();
+  
+          //将一个图片变成图标
+          URL resource = JButtonDemo02.class.getResource("123.jpg");
+          Icon icon = new ImageIcon(resource);
+  
+          //单选框
+          JRadioButton radioButton1 = new JRadioButton("JRadioButton01");
+          JRadioButton radioButton2 = new JRadioButton("JRadioButton02");
+          JRadioButton radioButton3 = new JRadioButton("JRadioButton03");
+  
+          //由于单选框只能选择一个，所以我们对其进行分组，就是一个组中只能选择一个
+          ButtonGroup group = new ButtonGroup();
+          group.add(radioButton1);
+          group.add(radioButton2);
+          group.add(radioButton3);
+  
+          container.add(radioButton1,BorderLayout.NORTH);
+          container.add(radioButton2,BorderLayout.CENTER);
+          container.add(radioButton3,BorderLayout.SOUTH);
+  
+          this.setVisible(true);
+          this.setSize(500,300);
+          this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+      }
+  
+      public static void main(String[] args) {
+          new JButtonDemo02();
+      }
+  }
+  ```
+
+  ![1626328991587](GUI_Book.assets/1626328991587.png)
+
 - 复选按钮
+
+  ```java
+  package cn.akio.lesson05;
+  
+  import javax.swing.*;
+  import java.awt.*;
+  import java.net.URL;
+  
+  /**
+   * @author Akio
+   * @ClassName JButtonDemo01
+   * @Description TODO
+   * @Date 2021/7/15 13:07
+   */
+  public class JButtonDemo03 extends JFrame {
+      public JButtonDemo03(){
+          Container container = this.getContentPane();
+  
+          //将一个图片变成图标
+          URL resource = JButtonDemo03.class.getResource("123.jpg");
+          Icon icon = new ImageIcon(resource);
+  
+          //多选框
+          JCheckBox checkBox01 = new JCheckBox("checkBox01");
+          JCheckBox checkBox02 = new JCheckBox("checkBox02");
+  
+          container.add(checkBox01,BorderLayout.NORTH);
+          container.add(checkBox02,BorderLayout.SOUTH);
+  
+          this.setVisible(true);
+          this.setSize(500,300);
+          this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+      }
+  
+      public static void main(String[] args) {
+          new JButtonDemo03();
+      }
+  }
+  ```
+
+  ![1626346478039](GUI_Book.assets/1626346478039.png)
+
 
 
 
 #### 3.6 列表
 
+###### 下拉框
 
+```java
+package cn.akio.lesson06;
+
+import javax.swing.*;
+import java.awt.*;
+
+/**
+ * @author Akio
+ * @ClassName TestComboboxDemo01
+ * @Description TODO
+ * @Date 2021/7/15 18:57
+ */
+public class TestComboboxDemo01 extends JFrame {
+    public TestComboboxDemo01(){
+        Container container = this.getContentPane();
+
+        JComboBox status = new JComboBox();
+
+        status.addItem(null);
+        status.addItem("正在热映");
+        status.addItem("已下架");
+        status.addItem("即将上映");
+
+        //如何获取这个值呢？可以使用监听器
+        //status.addActionListener();
+
+        container.add(status);//正常情况下我们应该是把下拉框放在panel面板中
+
+        this.setVisible(true);
+        this.setSize(500,350);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args) {
+        new TestComboboxDemo01();
+    }
+}
+```
+
+![1626347095403](GUI_Book.assets/1626347095403.png)
+
+
+
+###### 列表框
+
+```java
+package cn.akio.lesson06;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.Vector;
+
+/**
+ * @author Akio
+ * @ClassName TestComboboxDemo01
+ * @Description TODO
+ * @Date 2021/7/15 18:57
+ */
+public class TestComboboxDemo02 extends JFrame {
+    public TestComboboxDemo02(){
+        Container container = this.getContentPane();
+
+        //生成列表的内容
+        //String[] contents = {"1","2","3"};//静态写死
+        Vector contents = new Vector();//动态添加
+                                                                                                                                    
+        //列表中需要放入内容
+        JList jList = new JList(contents);
+
+        contents.add("1");
+        contents.add("12");
+        contents.add("123");
+
+        container.add(jList);
+
+        this.setVisible(true);
+        this.setSize(500,350);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args) {
+        new TestComboboxDemo02();
+    }
+}
+```
+
+![1626347754107](GUI_Book.assets/1626347754107.png)
+
+> **应用场景**
+>
+> - 下拉框：选择地区，或者一些单个选项
+> - 列表：展示信息，一般是动态扩容
 
 
 
 #### 3.7 文本框
 
+##### 文本框
+
+```java
+package cn.akio.lesson06;
+
+import javax.swing.*;
+import java.awt.*;
+
+/**
+ * @author Akio
+ * @ClassName TestTextDemo01
+ * @Description TODO
+ * @Date 2021/7/15 19:20
+ */
+public class TestTextDemo01 extends JFrame {
+    public TestTextDemo01(){
+        Container container = this.getContentPane();
+
+        JTextField textField = new JTextField("hello");
+        JTextField textField1 = new JTextField("world",20);//20为默认字符长度
+
+        container.add(textField,BorderLayout.NORTH);
+        container.add(textField1,BorderLayout.SOUTH);
+
+        this.setVisible(true);
+        this.setSize(500,350);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args) {
+        new TestTextDemo01();
+    }
+}
+```
+
+![1626348603723](GUI_Book.assets/1626348603723.png)
+
+##### 密码框
+
+```java
+package cn.akio.lesson06;
+
+import javafx.scene.control.PasswordField;
+
+import javax.swing.*;
+import java.awt.*;
+
+/**
+ * @author Akio
+ * @ClassName TestTextDemo01
+ * @Description TODO
+ * @Date 2021/7/15 19:20
+ */
+public class TestTextDemo02 extends JFrame {
+    public TestTextDemo02(){
+        Container container = this.getContentPane();
+
+        JPasswordField passwordField = new JPasswordField();//****
+        passwordField.setEchoChar('*');
+
+        container.add(passwordField);
+
+        this.setVisible(true);
+        this.setSize(500,350);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args) {
+        new TestTextDemo02();
+    }
+}
+```
+
+![1626348777829](GUI_Book.assets/1626348777829.png)
+
+
+
+##### 文本域
+
+```java
+package cn.akio.lesson05;
+
+import javax.swing.*;
+import java.awt.*;
+
+/**
+ * @author Akio
+ * @ClassName JScrollDemo
+ * @Description 滚动条\文本域1
+ * @Date 2021/7/15 12:56
+ */
+public class JScrollDemo extends JFrame{
+    public JScrollDemo(){
+        Container container = this.getContentPane();
+
+        //文本域
+        JTextArea textArea = new JTextArea(20,30);
+        textArea.setText("欢迎来到90年代");
+
+        //Scorll面板
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        container.add(scrollPane);
+
+        this.setVisible(true);
+        this.setBounds(100,100,300,350);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+    public static void main(String[] args) {
+        new JScrollDemo();
+    }
+}
+```
+
+![1626348892345](GUI_Book.assets/1626348892345.png)
 
 
 
 
 
+
+
+## 二、贪吃蛇项目
+
+### 1、贪吃蛇界面绘制
+
+![1626349134732](GUI_Book.assets/1626349134732.png)
+
+
+
+### 2、对于功能的添加
+
+添加功能的步骤：
+
+1、定义数据
+
+2、画上去
+
+3、监听事件
+​	键盘
+​	事件
+
+
+
+### 3、代码结构
+
+![1626517437859](GUI_Book.assets/1626517437859.png)
+
+```java
+package cn.akio.snake;
+
+import javax.swing.*;
+import java.net.URL;
+
+/**
+ * @author Akio
+ * @ClassName Data
+ * @Description 数据中心
+ * @Date 2021/7/15 19:47
+ */
+public class Data {
+    //相对路径 123.jpg
+    //绝对路径  /相当于当前项目
+    public static URL headerURL = Data.class.getResource("statics/header.png");
+    public static ImageIcon header = new ImageIcon(headerURL);
+
+    public static URL upURL = Data.class.getResource("statics/up.png");
+    public static URL downURL = Data.class.getResource("statics/down.png");
+    public static URL leftURL = Data.class.getResource("statics/left.png");
+    public static URL rightURL = Data.class.getResource("statics/right.png");
+    public static ImageIcon up = new ImageIcon(upURL);
+    public static ImageIcon down = new ImageIcon(downURL);
+    public static ImageIcon left = new ImageIcon(leftURL);
+    public static ImageIcon right = new ImageIcon(rightURL);
+
+    public static URL bodyURL = Data.class.getResource("statics/body.png");
+    public static ImageIcon body = new ImageIcon(bodyURL);
+
+    public static URL foodURL = Data.class.getResource("statics/food.png");
+    public static ImageIcon food = new ImageIcon(foodURL);
+}
+```
+
+```java
+package cn.akio.snake;
+
+import javax.swing.*;
+
+/**
+ * @author Akio
+ * @ClassName StartGame
+ * @Description 游戏主启动类
+ * @Date 2021/7/15 19:39
+ */
+public class StartGame {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+
+        frame.setBounds(500,230,900,720);
+        frame.setResizable(false);//窗口大小不可变
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        //正常的游戏界面都在面板上
+        frame.add(new GamePanel());
+        frame.setVisible(true);
+    }
+}
+```
+
+```java
+package cn.akio.snake;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.Random;
+
+/**
+ * @author Akio
+ * @ClassName GamePanel
+ * @Description 游戏的面板
+ * @Date 2021/7/15 19:43
+ */
+public class GamePanel extends JPanel implements KeyListener, ActionListener {
+
+    //定义贪吃蛇的数据结构
+    private int length;//蛇的长度
+    private int[] snakeX = new int[600];//贪吃蛇的x坐标（600的单位其实是像素） 25*25,贪吃蛇的头和身体的长款都是25
+    private int[] snakeY = new int[500];//贪吃蛇的y坐标 25*25
+    private String initDir;//初始化方向
+
+    //食物的坐标
+    private int foodX;
+    private int foodY;
+    Random random = new Random();
+
+    int score;//成绩
+
+    //游戏当前状态：start，stop
+    private boolean isStart = false;//默认是停止状态
+    //游戏是否失败的判定
+    private boolean isFail = false;//默认是不失败
+
+    //定时器
+    Timer timer = new Timer(100, this);//100ms执行一次
+
+    //构造器
+    public GamePanel() {
+        init();
+        //获得焦点和键盘事件
+        this.setFocusable(true);//获取焦点事件
+        this.addKeyListener(this);//获得键盘监听事件
+
+        timer.start();//游戏一开始定时器就启动
+    }
+
+    //初始化方法
+    public void init() {
+        length = 3;
+        snakeX[0] = 100;//脑袋的坐标
+        snakeY[0] = 100;
+        snakeX[1] = 75;//第一个身体的坐标
+        snakeY[1] = 100;
+        snakeX[2] = 50;//第二个身体的坐标
+        snakeY[2] = 100;
+        initDir = "R";//初始化方向向右
+
+        //食物坐标，这样食物就能随机分布在地图上
+        foodX = 25 + 25 * random.nextInt(850 / 25);
+        foodY = 75 + 25 * random.nextInt(600 / 25);
+
+        score = 0;
+    }
+
+    //绘制面板，我们游戏中的所有东西，都使用这个画笔来画
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);//清屏
+        //绘制静态的面板
+        this.setBackground(Color.WHITE);
+        Data.header.paintIcon(this, g, 25, 11);//头部广告/标题栏
+        g.fillRect(25, 75, 850, 600);//默认游戏界面
+
+        //画积分
+        g.setColor(Color.white);
+        g.setFont(new Font("楷体",Font.BOLD,18));
+        g.drawString("长度:"+length,750,35);
+        g.drawString("分数:"+score,750,50);
+
+        //把贪吃蛇画上去
+        //head，需要判断方向
+        if (initDir.equals("R")) {
+            Data.right.paintIcon(this, g, snakeX[0], snakeY[0]);
+        } else if (initDir.equals("L")) {
+            Data.left.paintIcon(this, g, snakeX[0], snakeY[0]);
+        } else if (initDir.equals("U")) {
+            Data.up.paintIcon(this, g, snakeX[0], snakeY[0]);
+        } else if (initDir.equals("D")) {
+            Data.down.paintIcon(this, g, snakeX[0], snakeY[0]);
+        }
+        //body
+        for (int i = 1; i < length; i++) {
+            Data.body.paintIcon(this, g, snakeX[i], snakeY[i]);
+        }
+
+        //画食物
+        Data.food.paintIcon(this, g, foodX, foodY);
+
+        //游戏状态
+        if (isStart == false) {
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("宋体", Font.BOLD, 20));//设置字体
+            g.drawString("press the space to start the game", 280, 300);
+        }
+
+        //是否失败状态
+        if (isFail) {
+            g.setColor(Color.RED);
+            g.setFont(new Font("宋体", Font.BOLD, 20));//设置字体
+            g.drawString("you Failed, press the space to try again", 260, 300);
+        }
+    }
+
+    /**
+     * 键盘监听事件
+     */
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int keyCode = e.getKeyCode();//获取键盘按下了什么
+        if (keyCode == KeyEvent.VK_SPACE) {//如何按下的是空格键
+            if (isFail) {
+                //重新开始
+                isFail = false;
+                init();
+            } else {
+                isStart = !isStart;//取反
+            }
+            repaint();//重新绘制
+        }
+        //贪吃蛇移动
+        if (keyCode == KeyEvent.VK_UP) {
+            initDir = "U";
+        } else if (keyCode == KeyEvent.VK_DOWN) {
+            initDir = "D";
+        } else if (keyCode == KeyEvent.VK_LEFT) {
+            initDir = "L";
+        } else if (keyCode == KeyEvent.VK_RIGHT) {
+            initDir = "R";
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+    /**
+     * 事件监听器
+     * 事件的监听---需要通过固定事件来判断，1s=10次
+     * @param e
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (isStart && isFail == false) {//如果游戏是开始状态并且不是失败状态，就让贪吃蛇动起来
+            //吃食物
+            if (snakeX[0] == foodX && snakeY[0] == foodY) {//当贪吃蛇的头部与食物重合
+                length++;//长度+1
+                score += 10;//分数+10
+                //然后再次随机产生食物
+                foodX = 25 + 25 * random.nextInt(850 / 25);
+                foodY = 75 + 25 * random.nextInt(600 / 25);
+            }
+
+            //移动
+            for (int i = length - 1; i > 0; i--) {//后一节移到前一节的位置 snakeX[1] = snakeX[0]
+                snakeX[i] = snakeX[i - 1];
+                snakeY[i] = snakeY[i - 1];
+            }
+            //走向
+            if (initDir.equals("R")) {
+                snakeX[0] = snakeX[0] + 25;
+                //边界判断,如果触及边界，就重新从左边出来
+                if (snakeX[0] > 850) {
+                    snakeX[0] = 25;
+                }
+            } else if (initDir.equals("L")) {
+                snakeX[0] = snakeX[0] - 25;
+                //边界判断,如果触及边界，就重新从右边出来
+                if (snakeX[0] < 25) {
+                    snakeX[0] = 850;
+                }
+            } else if (initDir.equals("U")) {
+                snakeY[0] = snakeY[0] - 25;
+                //边界判断,如果触及边界，就重新从下边出来
+                if (snakeY[0] < 75) {
+                    snakeY[0] = 650;
+                }
+            } else if (initDir.equals("D")) {
+                snakeY[0] = snakeY[0] + 25;
+                //边界判断,如果触及边界，就重新从上边出来
+                if (snakeY[0] > 650) {
+                    snakeY[0] = 75;
+                }
+            }
+
+            //失败的判断，撞到自己就算失败
+            //遍历身体所有的坐标。如果头的坐标与身体坐标重合就是撞到了
+            for (int i = 1; i < length; i++) {
+                if (snakeX[0]==snakeX[i] && snakeY[0]==snakeY[i]){
+                    isFail = true;
+                }
+            }
+
+            repaint();//重画页面
+        }
+        timer.start();//定时器开启
+    }
+}
+```
+
+![1626517931711](GUI_Book.assets/1626517931711.png)
+
+![1626517957671](GUI_Book.assets/1626517957671.png)
 
 
 
