@@ -16,7 +16,7 @@ public abstract class SuperObject {
     protected int y;//y坐标
 
     /**
-     *  给Cactus、Cloud、Bird提供的构造方法
+     *  给Cactus提供的构造方法
      * @param width
      * @param height
      */
@@ -28,7 +28,7 @@ public abstract class SuperObject {
     }
 
     /**
-     * 给Map、Dinosaur提供的构造方法
+     * 给Map、Dinosaur、Cloud、Bird提供的构造方法
      * @param width
      * @param height
      * @param x
@@ -39,8 +39,6 @@ public abstract class SuperObject {
         this.height = height;
         this.x = x;
         this.y = y;
-//        this.x = DinoWorld.WIDTH + this.width;//界面之外
-//        this.y = DinoWorld.HEIGHT - this.height;//猜想位置
     }
 
     /**
@@ -54,4 +52,11 @@ public abstract class SuperObject {
      * @return
      */
     public abstract BufferedImage getImage();
+
+    /**
+     * 判断是否越界
+     */
+    public boolean isOutOfBounds(){
+        return x <= -this.width;
+    }
 }

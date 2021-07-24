@@ -14,7 +14,7 @@ public class CactusA extends SuperObject implements Accelerate{
 
     public CactusA() {
         super(48, 39);
-        this.speed = 1;
+        this.speed = SPEED;
     }
 
     @Override

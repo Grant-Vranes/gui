@@ -7,4 +7,5 @@ package cn.akio.fovl;
  * @Date 2021/7/19 13:08
  */
 public interface Accelerate {
+    public static final int SPEED = 5;
 }

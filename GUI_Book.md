@@ -973,6 +973,67 @@ class KeyFrame extends Frame {
 
 ![1626173425182](GUI_Book.assets/1626173425182.png)
 
+有一点需要注意的是，对于一些游戏我们通常将其写在面板JPanel上，然后把面板加在JFrame上，此时对面板JPanel设置键盘监听需要做获取焦点的操作: this.setFocusable(true);//获取焦点事件,将焦点放到面板上
+
+而对于鼠标设置在JPanel上的鼠标监听
+
+```java
+this.addMouseListener(m);//装侦听
+this.addMouseMotionListener(m);//-------主要
+```
+
+
+
+```java
+public class DinoWorld extends JPanel{
+	public void action() {
+        //键盘监听--------------------------------------------
+        KeyAdapter keyAdapter = new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                super.keyTyped(e);
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                System.out.println("12312312312321");
+                int keyCode = e.getKeyCode();//获取键盘按下了什么s
+                System.out.println(keyCode);
+                if (keyCode == KeyEvent.VK_SPACE){//如果按下的是空格键盘
+                    System.out.println("小恐龙跳起来了");
+                }
+				repaint();
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                super.keyReleased(e);
+            }
+        };
+        //获得焦点和键盘事件
+        this.setFocusable(true);//获取焦点事件
+        this.addKeyListener(keyAdapter);    
+}
+
+public class StartGame {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+        DinoWorld dinoWorld = new DinoWorld();
+        frame.setSize(DinoWorld.WIDTH,DinoWorld.HEIGHT+30);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);//设置居于屏幕中央
+//        frame.setResizable(false);
+
+        //游戏居于面板上
+        frame.add(dinoWorld);
+
+        frame.setVisible(true);
+//        frame.pack();
+        dinoWorld.action();
+    }
+}
+```
+
 
 
 

@@ -20,7 +20,7 @@ public class Map extends SuperObject implements Accelerate {
 
     public Map() {
         super(DinoWorld.WIDTH, DinoWorld.HEIGHT, 0, 0);
-        this.speed = 1;
+        this.speed = SPEED;
         this.x1 = DinoWorld.WIDTH;
     }
 

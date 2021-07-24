@@ -18,7 +18,7 @@ public class Bird extends SuperObject{
 
     @Override
     public void step() {
-
+        x -= speed;
     }
 
     private int index = 0;

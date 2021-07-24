@@ -18,7 +18,7 @@ public class Cloud extends SuperObject {
 
     @Override
     public void step() {
-
+        x -= speed;
     }
 
     @Override
