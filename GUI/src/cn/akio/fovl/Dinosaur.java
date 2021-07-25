@@ -12,12 +12,12 @@ public class Dinosaur extends SuperObject {
     public static final int dinoWidth = 40;//恐龙的宽
     public static final int dinoHeight = 43;//恐龙的高
     public static final int DINOX = 30;//恐龙静态位置x坐标
-    public static final int DINOY = 200;//恐龙静态位置y坐标
+    public static final int DINOY = 208;//恐龙静态位置y坐标
     public static final int RUN = 0;//奔跑状态
     public static final int JUMP = 1;//跳跃状态
     public static final int DEAD = 2;//死亡状态
     private int state = RUN;//当前为默认状态
-    private int dinoJumpHigh = 200;//跳跃高度
+    private int dinoJumpHigh = 180;//跳跃高度
 
     public Dinosaur() {
         super(dinoWidth, dinoHeight, DINOX, DINOY);

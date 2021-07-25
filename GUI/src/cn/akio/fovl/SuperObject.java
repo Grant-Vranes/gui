@@ -6,7 +6,7 @@ import java.util.Random;
 /**
  * @author Akio
  * @ClassName SuperObject
- * @Description 超类3
+ * @Description 超类，所有元素继承此类
  * @Date 2021/7/19 11:15
  */
 public abstract class SuperObject {
@@ -14,9 +14,10 @@ public abstract class SuperObject {
     protected int height;
     protected int x;//x坐标
     protected int y;//y坐标
+    Random random = new Random();
 
     /**
-     *  给Cactus提供的构造方法
+     *  给Cactus、Cloud、Bird逆向来物提供的构造方法
      * @param width
      * @param height
      */
@@ -24,11 +25,19 @@ public abstract class SuperObject {
         this.width = width;
         this.height = height;
         this.x = DinoWorld.WIDTH;
-        this.y = DinoWorld.HEIGHT-this.height-32;
+        if(this instanceof Accelerate){//如果是仙人掌
+            this.y = DinoWorld.HEIGHT-this.height-32;
+        }
+        if(this instanceof Bird){//如果是鸟
+            this.y = DinoWorld.HEIGHT-4*this.height-32;
+        }
+        if (this instanceof Cloud){//如果是云
+            this.y = random.nextInt(DinoWorld.HEIGHT/2);
+        }
     }
 
     /**
-     * 给Map、Dinosaur、Cloud、Bird提供的构造方法
+     * 给Map、Dinosaur提供的构造方法
      * @param width
      * @param height
      * @param x

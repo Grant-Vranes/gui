@@ -44,7 +44,6 @@ public class DinoWorld extends JPanel{
      */
     public SuperObject nextOne() {
         //所以采用随机数的方法生成不同的障碍物对象
-        Random random = new Random();
         int type = random.nextInt(100);
         if (type < 20) {
             return new CactusA();
@@ -60,14 +59,16 @@ public class DinoWorld extends JPanel{
     }
 
     private int enterIndex = 0;
+    private int base = random.nextInt(50)+300;
     /**
      * 逆向来物生成并加入
      */
     public void enterReverseObjectAction() {//每10ms走一次
         enterIndex++;//每10ms增1
         //为了增加游戏的真实性，随机间隔时间里产生逆向来物
-        //生成200~300区间
-        if (enterIndex % (random.nextInt(100)+200) == 0) {//每400（10*40）ms走一次
+        //生成200~250区间
+        if (enterIndex % base == 0) {//每100*10~200*10ms之间走一次
+            base = random.nextInt(50)+300;
             SuperObject obj = nextOne();
             reverseObject = Arrays.copyOf(reverseObject, reverseObject.length + 1);
             reverseObject[reverseObject.length - 1] = obj;

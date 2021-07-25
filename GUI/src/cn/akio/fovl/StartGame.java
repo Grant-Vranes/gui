@@ -5,7 +5,7 @@ import javax.swing.*;
 /**
  * @author Akio
  * @ClassName StartGame
- * @Description TODO
+ * @Description 游戏启动类
  * @Date 2021/7/20 20:00
  */
 public class StartGame {
@@ -20,6 +20,7 @@ public class StartGame {
 
         //游戏居于面板上
         frame.add(dinoWorld);
+//        frame.addKeyListener(dinoWorld);
 
         frame.setVisible(true);
 //        frame.pack();

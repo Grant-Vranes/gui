@@ -12,7 +12,7 @@ public class Bird extends SuperObject{
     private int speed;//移动速度
     public Bird(){
         super(38,23);
-        this.speed = 1;
+        this.speed = 3;
     }
 
 
