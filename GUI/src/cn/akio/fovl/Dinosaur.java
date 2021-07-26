@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
  * @Date 2021/7/19 8:41
  */
 public class Dinosaur extends SuperObject {
-    public static final int dinoWidth = 40;//恐龙的宽
+    public static final int dinoWidth = 40;//恐龙的宽3
     public static final int dinoHeight = 43;//恐龙的高
     public static final int DINOX = 30;//恐龙静态位置x坐标
     public static final int DINOY = 208;//恐龙静态位置y坐标
@@ -58,7 +58,14 @@ public class Dinosaur extends SuperObject {
     }
 
     /**
-     * 修改状态
+     * 判断是否失败状态
+     */
+    public boolean isDead(){
+        return state == DEAD;
+    }
+
+    /**
+     * 切换跳跃和奔跑状态状态
      */
     public void jump(){
         if (isRun()){
@@ -66,6 +73,13 @@ public class Dinosaur extends SuperObject {
         }else if(isJump()){
             state = RUN;
         }
+    }
+
+    /**
+     * 小恐龙失败
+     */
+    public void goDead(){
+        state = DEAD;
     }
 
     private int index = 0;

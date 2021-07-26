@@ -17,7 +17,8 @@ public abstract class SuperObject {
     Random random = new Random();
 
     /**
-     *  给Cactus、Cloud、Bird逆向来物提供的构造方法
+     * 给Cactus、Cloud、Bird逆向来物提供的构造方法
+     *
      * @param width
      * @param height
      */
@@ -25,19 +26,20 @@ public abstract class SuperObject {
         this.width = width;
         this.height = height;
         this.x = DinoWorld.WIDTH;
-        if(this instanceof Accelerate){//如果是仙人掌
-            this.y = DinoWorld.HEIGHT-this.height-32;
+        if (this instanceof Accelerate) {//如果是仙人掌
+            this.y = DinoWorld.HEIGHT - this.height - 32;
         }
-        if(this instanceof Bird){//如果是鸟
-            this.y = DinoWorld.HEIGHT-4*this.height-32;
+        if (this instanceof Bird) {//如果是鸟
+            this.y = DinoWorld.HEIGHT - 4 * this.height - 32;
         }
-        if (this instanceof Cloud){//如果是云
-            this.y = random.nextInt(DinoWorld.HEIGHT/2);
+        if (this instanceof Cloud) {//如果是云
+            this.y = random.nextInt(DinoWorld.HEIGHT / 2);
         }
     }
 
     /**
      * 给Map、Dinosaur提供的构造方法
+     *
      * @param width
      * @param height
      * @param x
@@ -65,7 +67,20 @@ public abstract class SuperObject {
     /**
      * 判断是否越界
      */
-    public boolean isOutOfBounds(){
+    public boolean isOutOfBounds() {
         return x <= -this.width;
+    }
+
+    /**
+     * 检测碰撞 this:逆向来物 other:恐龙
+     */
+    public boolean isHit(Dinosaur dinosaur) {
+        int x1 = Dinosaur.DINOX - this.width;
+        int x2 = Dinosaur.DINOX + dinosaur.width;
+        int y1 = Dinosaur.DINOY - this.height;
+        int y2 = Dinosaur.DINOY;
+        int x = this.x;//逆向来物的x
+        int y = dinosaur.y;//小恐龙的y
+        return x >= x1 && x <= x2 && y >= y1 && y <= y2;
     }
 }

@@ -19,6 +19,11 @@ public class DinoWorld extends JPanel{
     Random random = new Random();
     public static final int WIDTH = 734;
     public static final int HEIGHT = 286;
+    public static final int START = 0;//启动状态
+    public static final int RUNNING = 1;//运行状态
+    public static final int PAUSE = 2;//暂停状态
+    public static final int GAME_OVER = 3;//游戏结束状态
+    private int state = START;//当前状态（默认为启动状态）
 
     //如下对象为窗口中所显示的对象
     private Map map = new Map();
@@ -90,6 +95,28 @@ public class DinoWorld extends JPanel{
     }
 
     /**
+     * 恐龙撞击到逆向来物
+     */
+    public void dinoBangAction(){//每10ms走一次
+        for (int i = 0; i < reverseObject.length; i++) {
+            SuperObject s = reverseObject[i];//获取每一个逆向来物
+            if (!dino.isDead() && s.isHit(dino)){
+                dino.goDead();
+                System.out.println("游戏结束");
+            }
+        }
+    }
+
+    /**
+     * 检测游戏结束
+     */
+    public void checkGameOverAction(){//每10ms走一次
+        if (dino.isDead()){//如果小恐龙失败，表示游戏结束
+            state = GAME_OVER;//将游戏状态修改为结束
+        }
+    }
+
+    /**
      * 启动程序的执行
      */
     public void action() {
@@ -102,11 +129,25 @@ public class DinoWorld extends JPanel{
 
             @Override
             public void keyPressed(KeyEvent e) {
-                int keyCode = e.getKeyCode();//获取键盘按下了什么
-                if (keyCode == KeyEvent.VK_SPACE){//如果按下的是空格键盘
-                    System.out.println("小恐龙跳起来了");
-//                    //针对跳跃应该也有一个定时器,定时刷新小恐龙的跳跃轨迹，这样就能做到一点动画效果，但是仔细想了想，使用定时器，只要我按了空格，就会一直执行，不会停啊
-                    dino.jump();//这个方法就将RUN改为了JUMP
+                switch (state) {
+                    case START:
+                        state = RUNNING;
+                        break;
+                    case RUNNING:
+                        int keyCode = e.getKeyCode();//获取键盘按下了什么
+                        if (keyCode == KeyEvent.VK_SPACE){//如果按下的是空格键盘
+                            System.out.println("小恐龙跳起来了");
+                            dino.jump();//这个方法就将RUN改为了JUMP
+                        }
+                        break;
+                    case GAME_OVER:
+                        //清空游戏数据，开启下辈子
+                        map = new Map();
+                        dino = new Dinosaur();
+                        reverseObject = new SuperObject[0];
+                        System.gc();
+                        state = START;
+                        break;
                 }
             }
 
@@ -132,10 +173,13 @@ public class DinoWorld extends JPanel{
             @Override
             public void run() {//定时干的事（每10ms走一次）
                 //...
-                stepAction();//背景图移动
-                enterReverseObjectAction();//逆向来物加入
-                outOfBoundsAction();//删除越界逆向来物
-//                System.out.println(cactus.length);
+                if (state == RUNNING) {
+                    stepAction();//背景图移动
+                    enterReverseObjectAction();//逆向来物加入
+                    outOfBoundsAction();//删除越界逆向来物
+                    dinoBangAction();//检测碰撞
+                    checkGameOverAction();//检测游戏是否结束
+                }
                 repaint();//重画（重新调用paint方法）
             }
         }, intervel, intervel);
@@ -155,6 +199,20 @@ public class DinoWorld extends JPanel{
             SuperObject s = reverseObject[i];
             g.drawImage(s.getImage(), s.x, s.y, null);
         }
-    }
 
+        switch (state) {//根据不同状态画不同的图
+            case START://启动状态
+
+                break;
+            case PAUSE://暂停状态
+
+                break;
+            case GAME_OVER://游戏结束状态
+                g.drawImage(Images.game_over,DinoWorld.WIDTH/3,DinoWorld.HEIGHT/3,null);
+        }
+    }
 }
+
+//遗留问题：
+//恐龙不撞击飞鸟的时候也会出现问题？
+//关于暂停状态是需要按什么按键才能暂停还是做一个ICON？

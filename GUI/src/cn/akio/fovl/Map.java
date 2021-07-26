@@ -45,7 +45,7 @@ public class Map extends SuperObject implements Accelerate {
     }
 
     /**
-     * 方法不够优秀，对齐进行重构
+     * 方法不够优秀，对其进行重构
      * @param index
      * @return
      */
