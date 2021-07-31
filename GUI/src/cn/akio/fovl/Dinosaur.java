@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
  * @Date 2021/7/19 8:41
  */
 public class Dinosaur extends SuperObject {
-    public static final int dinoWidth = 40;//恐龙的宽3
+    public static final int dinoWidth = 40;//恐龙的宽
     public static final int dinoHeight = 43;//恐龙的高
     public static final int DINOX = 30;//恐龙静态位置x坐标
     public static final int DINOY = 208;//恐龙静态位置y坐标

@@ -9,7 +9,7 @@ import java.util.Random;
  * @Description 仙人掌
  * @Date 2021/7/19 11:18
  */
-public class CactusC extends SuperObject implements Accelerate{
+public class CactusC extends SuperObject implements Accelerate,GetScore{
     private int speed;//移动速度
 
     public CactusC() {
@@ -25,5 +25,14 @@ public class CactusC extends SuperObject implements Accelerate{
     @Override
     public BufferedImage getImage() {
         return Images.cactus[2];
+    }
+
+    /**
+     * 成功躲过仙人掌C得10分
+     * @return
+     */
+    @Override
+    public int getScore() {
+        return 10;
     }
 }

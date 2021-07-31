@@ -77,8 +77,10 @@ public abstract class SuperObject {
     public boolean isHit(Dinosaur dinosaur) {
         int x1 = Dinosaur.DINOX - this.width;
         int x2 = Dinosaur.DINOX + dinosaur.width;
-        int y1 = Dinosaur.DINOY - this.height;
-        int y2 = Dinosaur.DINOY;
+//        int y1 = Dinosaur.DINOY - this.height;
+//        int y2 = Dinosaur.DINOY;
+        int y1 = this.y-this.height;
+        int y2 = this.y+this.height;
         int x = this.x;//逆向来物的x
         int y = dinosaur.y;//小恐龙的y
         return x >= x1 && x <= x2 && y >= y1 && y <= y2;

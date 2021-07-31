@@ -1,6 +1,8 @@
 package cn.akio.fovl;
 
 
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -19,11 +21,12 @@ public class DinoWorld extends JPanel{
     Random random = new Random();
     public static final int WIDTH = 734;
     public static final int HEIGHT = 286;
+    public static final int INIT = -1;//首次启动状态
     public static final int START = 0;//启动状态
     public static final int RUNNING = 1;//运行状态
     public static final int PAUSE = 2;//暂停状态
     public static final int GAME_OVER = 3;//游戏结束状态
-    private int state = START;//当前状态（默认为启动状态）
+    private int state = INIT;//当前状态（默认为启动状态）
 
     //如下对象为窗口中所显示的对象
     private Map map = new Map();
@@ -80,6 +83,7 @@ public class DinoWorld extends JPanel{
         }
     }
 
+    private int score = 0;
     /**
      * 删除出界的逆向来物reverseObject
      */
@@ -87,6 +91,17 @@ public class DinoWorld extends JPanel{
         //删除越界的逆向来物
         for (int i = 0; i < reverseObject.length; i++) {
             if (reverseObject[i].isOutOfBounds()){
+                //被过掉的因素才会得分
+                if (reverseObject[i] instanceof GetScore) {//因为有些逆向来物不具备得分效果，所以需要筛选
+                    GetScore ge = (GetScore)reverseObject[i];
+                    score += ge.getScore();
+                    //与HI.txt文件交换最高分
+                    int HI = DoHI.getHI();
+                    if (score > HI){
+                        DoHI.setHI(score);
+                    }
+                }
+
                 reverseObject[i] = reverseObject[reverseObject.length-1];//将越界的元素用最后一个元素顶替
                 reverseObject = Arrays.copyOf(reverseObject,reverseObject.length-1);//然后缩容
             }
@@ -100,7 +115,7 @@ public class DinoWorld extends JPanel{
     public void dinoBangAction(){//每10ms走一次
         for (int i = 0; i < reverseObject.length; i++) {
             SuperObject s = reverseObject[i];//获取每一个逆向来物
-            if (!dino.isDead() && s.isHit(dino)){
+            if (!(s instanceof Cloud) && !dino.isDead() && s.isHit(dino)){
                 dino.goDead();
                 System.out.println("游戏结束");
             }
@@ -129,19 +144,33 @@ public class DinoWorld extends JPanel{
 
             @Override
             public void keyPressed(KeyEvent e) {
+                int keyCode = e.getKeyCode();//获取键盘按下了什么
                 switch (state) {
+                    case INIT:
+                        state = START;
+                        break;
                     case START:
                         state = RUNNING;
                         break;
                     case RUNNING:
-                        int keyCode = e.getKeyCode();//获取键盘按下了什么
                         if (keyCode == KeyEvent.VK_SPACE){//如果按下的是空格键盘
                             System.out.println("小恐龙跳起来了");
                             dino.jump();//这个方法就将RUN改为了JUMP
                         }
+                        if (keyCode == KeyEvent.VK_CAPS_LOCK){//按下caps转换大小写暂停
+                            System.out.println("暂停");
+                            state = PAUSE;
+                        }
+                        break;
+                    case PAUSE:
+                        if (keyCode == KeyEvent.VK_CAPS_LOCK){//按下caps转换大小写暂停
+                            System.out.println("解除暂停");
+                            state = RUNNING;
+                        }
                         break;
                     case GAME_OVER:
                         //清空游戏数据，开启下辈子
+                        score = 0;
                         map = new Map();
                         dino = new Dinosaur();
                         reverseObject = new SuperObject[0];
@@ -191,28 +220,41 @@ public class DinoWorld extends JPanel{
      */
     @Override
     public void paint(Graphics g) {
-        g.drawImage(map.getImage(0), map.x, map.y, null);
-        g.drawImage(map.getImage(1), map.getX1(), map.y, null);
-        g.drawImage(dino.getImage(), dino.x, dino.y, null);
-        //遍历逆向来物
-        for (int i = 0; i < reverseObject.length; i++) {
-            SuperObject s = reverseObject[i];
-            g.drawImage(s.getImage(), s.x, s.y, null);
-        }
+        if (state == INIT){
+            g.drawImage(Images.init,95,-120,null);
+        }else{
+            //RUNNING状态
+            g.drawImage(map.getImage(0), map.x, map.y, null);
+            g.drawImage(map.getImage(1), map.getX1(), map.y, null);
+            g.drawImage(dino.getImage(), dino.x, dino.y, null);
+            //遍历逆向来物
+            for (int i = 0; i < reverseObject.length; i++) {
+                SuperObject s = reverseObject[i];
+                g.drawImage(s.getImage(), s.x, s.y, null);
+            }
+            //调整字体和颜色
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("宋体",Font.BOLD,16));
+            g.drawString("HI:"+DoHI.getHI()+"   SCORE:"+score, 530, 30);
+//            g.drawString("SCORE:"+score, 600, 30);
 
-        switch (state) {//根据不同状态画不同的图
-            case START://启动状态
-
-                break;
-            case PAUSE://暂停状态
-
-                break;
-            case GAME_OVER://游戏结束状态
-                g.drawImage(Images.game_over,DinoWorld.WIDTH/3,DinoWorld.HEIGHT/3,null);
+            switch (state) {//根据不同状态画不同的图
+                case START://启动状态
+                    g.drawImage(Images.start,245,60,null);
+                    //调整字体和颜色
+                    g.setColor(Color.gray);
+                    g.setFont(new Font("宋体",Font.BOLD,18));
+                    g.drawString("caps-暂停   空格-跳跃",250,150);
+                    g.drawString("快速双击空格可定格飞行",250,170);
+                    break;
+                case PAUSE://暂停状态
+                    //g.drawImage(Images.start,260,60,null);
+                    g.drawImage(Images.pause,4280,60,null);
+                    break;
+                case GAME_OVER://游戏结束状态
+                    g.drawImage(Images.game_over,DinoWorld.WIDTH/3,DinoWorld.HEIGHT/3,null);
+                    break;
+            }
         }
     }
 }
-
-//遗留问题：
-//恐龙不撞击飞鸟的时候也会出现问题？
-//关于暂停状态是需要按什么按键才能暂停还是做一个ICON？

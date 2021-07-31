@@ -2,7 +2,6 @@ package cn.akio.fovl;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.nio.Buffer;
 
 /**
  * @author Akio
@@ -17,7 +16,10 @@ public class Images {
     public static BufferedImage cloud;
     public static BufferedImage[] birds;
 
+    public static BufferedImage init;//游戏首次开始图片
+    public static BufferedImage start;//游戏开始
     public static BufferedImage game_over;//结束状态
+    public static BufferedImage pause;//暂停按钮
 
     static {//初始化图片
         //加载背景图片组
@@ -45,8 +47,18 @@ public class Images {
         //加载云图片
         cloud = readImage("statics/cloud.png");
 
+        //加载幕布首次开始图片
+        init = readImage("statics/init.png");
+
+        //加载开始图片
+        start = readImage("statics/start.png");
+
         //加载结束图片
         game_over = readImage("statics/game_over.png");
+
+        //加载暂停图标
+        pause = readImage("statics/pause.png");
+
     }
 
     /**
