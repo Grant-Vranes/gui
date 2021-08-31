@@ -26,12 +26,47 @@ public class DinoWorld extends JPanel{
     public static final int RUNNING = 1;//运行状态
     public static final int PAUSE = 2;//暂停状态
     public static final int GAME_OVER = 3;//游戏结束状态
-    private int state = INIT;//当前状态（默认为启动状态）
+    public static final int RESURRECT = 4;//复活中状态
+    private static int state = INIT;//当前状态（默认为启动状态）
+
 
     //如下对象为窗口中所显示的对象
     private Map map = new Map();
-    private Dinosaur dino = new Dinosaur();
+    private static Dinosaur dino = new Dinosaur();
     private SuperObject[] reverseObject = {};//所有的逆向来物集合（仙人掌、鸟、云朵）在此统称为reverseObject（逆向来物），但是需要注意的是云朵只是背景因素，不参与碰撞
+
+    /**
+     * 给外部提供一个修改状态的方法
+     * 用于复活按钮
+     */
+    public static void setState(){
+        state = RESURRECT;
+        dino.setLife(-1);
+//        Thread thread = new Thread(){//启用一个线程进行倒计时，复活后三秒倒计时开始
+//            @Override
+//            public void run() {
+//                for (int i = 3; i >= 1; i--) {
+//                    try {
+////                        g.drawString(i+"", 280,60);
+//                        Thread.sleep(1000);
+//                        System.out.println(i);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                state = RUNNING;
+//            }
+//        };
+//        thread.start();
+        System.out.println(dino.life);
+    }
+
+    /**
+     * 用于下辈子按钮
+     */
+    public static void setNextLife(){
+        state = GAME_OVER;
+    }
 
 
     /**
@@ -53,13 +88,13 @@ public class DinoWorld extends JPanel{
     public SuperObject nextOne() {
         //所以采用随机数的方法生成不同的障碍物对象
         int type = random.nextInt(100);
-        if (type < 20) {
+        if (type < 25) {
             return new CactusA();
-        } else if (type < 45) {
+        } else if (type < 55) {
             return new CactusB();
-        } else if (type < 70){
+        } else if (type < 75){
             return new CactusC();
-        } else if (type < 85){
+        } else if (type < 90){
             return new Bird();
         } else{
             return new Cloud();
@@ -67,19 +102,23 @@ public class DinoWorld extends JPanel{
     }
 
     private int enterIndex = 0;
-    private int base = random.nextInt(50)+300;
+    private int base = 100;
     /**
      * 逆向来物生成并加入
      */
     public void enterReverseObjectAction() {//每10ms走一次
+//        int base = random.nextInt(50)+300;
         enterIndex++;//每10ms增1
         //为了增加游戏的真实性，随机间隔时间里产生逆向来物
         //生成200~250区间
         if (enterIndex % base == 0) {//每100*10~200*10ms之间走一次
-            base = random.nextInt(50)+300;
+//            base = random.nextInt(50)+300;
             SuperObject obj = nextOne();
             reverseObject = Arrays.copyOf(reverseObject, reverseObject.length + 1);
             reverseObject[reverseObject.length - 1] = obj;
+            System.out.println(enterIndex);
+            base = random.nextInt(100)+50;
+            enterIndex = 0;
         }
     }
 
@@ -101,7 +140,6 @@ public class DinoWorld extends JPanel{
                         DoHI.setHI(score);
                     }
                 }
-
                 reverseObject[i] = reverseObject[reverseObject.length-1];//将越界的元素用最后一个元素顶替
                 reverseObject = Arrays.copyOf(reverseObject,reverseObject.length-1);//然后缩容
             }
@@ -116,8 +154,17 @@ public class DinoWorld extends JPanel{
         for (int i = 0; i < reverseObject.length; i++) {
             SuperObject s = reverseObject[i];//获取每一个逆向来物
             if (!(s instanceof Cloud) && !dino.isDead() && s.isHit(dino)){
-                dino.goDead();
-                System.out.println("游戏结束");
+                if (dino.getLife() <= 0){//如果没有复活次数
+                    dino.goDead();
+                    System.out.println("游戏结束");
+                }else{
+                    //复活弹窗
+                    state = PAUSE;
+                    new ContinueDialog();
+                    //缩容很重要，当小恐龙撞到逆向来物，应当在暂停的同时把这个撞到的逆向来物给删除，以免解除暂停后一直撞上他了
+                    reverseObject[i] = reverseObject[reverseObject.length-1];//将越界的元素用最后一个元素顶替
+                    reverseObject = Arrays.copyOf(reverseObject,reverseObject.length-1);//然后缩容
+                }
             }
         }
     }
@@ -127,7 +174,7 @@ public class DinoWorld extends JPanel{
      */
     public void checkGameOverAction(){//每10ms走一次
         if (dino.isDead()){//如果小恐龙失败，表示游戏结束
-            state = GAME_OVER;//将游戏状态修改为结束
+            state = GAME_OVER;
         }
     }
 
@@ -169,6 +216,7 @@ public class DinoWorld extends JPanel{
                         }
                         break;
                     case GAME_OVER:
+
                         //清空游戏数据，开启下辈子
                         score = 0;
                         map = new Map();
@@ -181,7 +229,7 @@ public class DinoWorld extends JPanel{
             }
 
             @Override
-            public void keyReleased(KeyEvent e) {
+            public void keyReleased(KeyEvent e) {//释放按键
                 super.keyReleased(e);
             }
         };
@@ -214,6 +262,8 @@ public class DinoWorld extends JPanel{
         }, intervel, intervel);
     }
 
+    private int index = 1;
+    private int countDown = 3;
     /**
      * 重写paint()  g：画笔
      * @param g
@@ -249,10 +299,24 @@ public class DinoWorld extends JPanel{
                     break;
                 case PAUSE://暂停状态
                     //g.drawImage(Images.start,260,60,null);
-                    g.drawImage(Images.pause,4280,60,null);
+                    g.drawImage(Images.pause,280,60,null);
                     break;
                 case GAME_OVER://游戏结束状态
                     g.drawImage(Images.game_over,DinoWorld.WIDTH/3,DinoWorld.HEIGHT/3,null);
+                    break;
+                case RESURRECT://复活中状态
+                    index++;
+                    if ( index % 150 == 0){
+                        index = 0;
+                        g.setColor(Color.black);
+                        g.setFont(new Font("黑体",Font.BOLD,100));
+                        g.drawString(countDown--+"", 350, 100);
+                        System.out.println(countDown);
+                        if (countDown == 0){
+                            countDown = 3;
+                            state = RUNNING;
+                        }
+                    }
                     break;
             }
         }

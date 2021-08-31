@@ -1,6 +1,7 @@
 package cn.akio.fovl;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author Akio
@@ -12,7 +13,10 @@ public class StartGame {
     public static void main(String[] args) {
         new DoHI();//为了调用构造方法
         JFrame frame = new JFrame();
+        frame.setTitle("侏罗纪来袭");
         DinoWorld dinoWorld = new DinoWorld();
+        dinoWorld.action();
+
         frame.setSize(DinoWorld.WIDTH,DinoWorld.HEIGHT+30);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);//设置居于屏幕中央
@@ -24,6 +28,6 @@ public class StartGame {
 
         frame.setVisible(true);
 //        frame.pack();
-        dinoWorld.action();
+
     }
 }

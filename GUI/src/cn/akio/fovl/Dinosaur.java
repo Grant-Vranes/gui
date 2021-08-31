@@ -17,7 +17,8 @@ public class Dinosaur extends SuperObject {
     public static final int JUMP = 1;//跳跃状态
     public static final int DEAD = 2;//死亡状态
     private int state = RUN;//当前为默认状态
-    private int dinoJumpHigh = 180;//跳跃高度
+    private int dinoJumpHigh = 170;//跳跃高度
+    public static int life = 3;//霸王龙之体，可以复活三次
 
     public Dinosaur() {
         super(dinoWidth, dinoHeight, DINOX, DINOY);
@@ -98,5 +99,21 @@ public class Dinosaur extends SuperObject {
         }else {
             return Images.dinosaurs[3];
         }
+    }
+
+    /**
+     * 获取复活次数
+     * @return
+     */
+    public int getLife() {
+        return life;
+    }
+
+    /**
+     * 修改复活次数
+     * @param life
+     */
+    public void setLife(int life) {
+        this.life += life;
     }
 }
